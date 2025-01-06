@@ -1,4 +1,3 @@
-import React from "react";
 import {
   View,
   Text,
@@ -6,6 +5,7 @@ import {
   Image,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
+  Platform,
   Keyboard,
 } from "react-native";
 
@@ -18,10 +18,9 @@ const InputField = ({
   inputStyle,
   iconStyle,
   className,
-
   ...props
 }) => (
-  <KeyboardAvoidingView behavior="padding" enabled>
+  <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View className="my-2 w-full">
         {label && (
@@ -39,7 +38,7 @@ const InputField = ({
           )}
           <TextInput
             secureTextEntry={secureTextEntry}
-            className={`rounded-full flex-1 px-4 py-2 JakartaSemiBold text-[15px] ${inputStyle || ""} text-left`}
+            className={`rounded-full flex-1 px-4 py-2 JakartaSemiBold text-[15px] ${inputStyle} text-left`}
             {...props}
           />
         </View>
