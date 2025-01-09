@@ -14,7 +14,7 @@ const SignUp = () => {
   const [form, setForm] = useState({ name: "", email: "", password: "" });
 
   const [verification, setVerification] = useState({
-    state: "success",
+    state: "pending",
     error: "",
     code: "",
   });
@@ -110,6 +110,41 @@ const SignUp = () => {
             <Text className="text-primary-500">Log In</Text>
           </Link>
         </View>
+        <ReactNativeModal
+          isVisible={verification.state === "pending"}
+          onModalHide={() =>
+            setVerification({ ...verification, state: "success" })
+          }
+        >
+          <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
+            <Image
+              source={images.check}
+              className="w-[110px] h-[110px] mx-auto my-5"
+            />
+            <Text className="text-3xl font-JakartaBold text-center">
+              Verification
+            </Text>
+            <Text className="font-Jakarta mb-5">
+              Verification code sent to {form.email}
+            </Text>
+            <InputField
+              label="Code"
+              icon={icons.lock}
+              placeholder="12345"
+              value={verification.code}
+              keyboardType="nuemric"
+              onChangeText={(code) =>
+                setVerification({ ...verification, code })
+              }
+            />
+            <CustomButton
+              title="Browse Home"
+              onPress={() => router.replace("/(root)/(tabs)/home")}
+              className="mt-5"
+            />
+          </View>
+        </ReactNativeModal>
+
         <ReactNativeModal isVisible={verification.state === "success"}>
           <View className="bg-white px-7 py-9 rounded-2xl min-h-[300px]">
             <Image
