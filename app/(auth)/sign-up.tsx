@@ -132,7 +132,7 @@ const SignUp = () => {
               icon={icons.lock}
               placeholder="12345"
               value={verification.code}
-              keyboardType="nuemric"
+              keyboardType="numeric"
               onChangeText={(code) =>
                 setVerification({ ...verification, code })
               }
