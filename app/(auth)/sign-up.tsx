@@ -1,4 +1,11 @@
-import { Text, ScrollView, View, Image, Alert } from "react-native";
+import {
+  Text,
+  ScrollView,
+  View,
+  Image,
+  Alert,
+  ActivityIndicator,
+} from "react-native"; // Added ActivityIndicator
 import { icons, images } from "@/constants";
 import InputField from "@/components/InputField";
 import React, { useState } from "react";
@@ -12,16 +19,18 @@ const SignUp = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
 
   const [form, setForm] = useState({ name: "", email: "", password: "" });
-
   const [verification, setVerification] = useState({
     state: "default",
     error: "",
     code: "",
   });
 
+  const [loading, setLoading] = useState(false); // Added state for loading
+
   const onSignUpPress = async () => {
     if (!isLoaded) return;
 
+    setLoading(true); // Start loading
     try {
       await signUp.create({
         emailAddress: form.email,
@@ -33,19 +42,22 @@ const SignUp = () => {
       setVerification({ ...verification, state: "pending" });
     } catch (err) {
       Alert.alert("Error", err.errors[0].longMessage);
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
   const onVerifyPress = async () => {
     if (!isLoaded) return;
 
+    setLoading(true); // Start loading
     try {
       const signUpAttempt = await signUp.attemptEmailAddressVerification({
         code: verification.code,
       });
 
       if (signUpAttempt.status === "complete") {
-        //TODO: create a database user!
+        // TODO: create a database user!
         await setActive({ session: signUpAttempt.createdSessionId });
         setVerification({ ...verification, state: "success" });
       } else {
@@ -61,6 +73,8 @@ const SignUp = () => {
         error: err.errors[0].longMessage,
         state: "failed",
       });
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -96,9 +110,16 @@ const SignUp = () => {
             value={form.password}
             onChangeText={(value) => setForm({ ...form, password: value })}
           />
+          {/* Added loading spinner */}
+          {loading && (
+            <ActivityIndicator size="large" color="#0000ff" className="mt-5" />
+          )}
+
+          {/* Disabled button during loading */}
           <CustomButton
             title="Sign Up"
             onPress={onSignUpPress}
+            disabled={loading} // Disable button when loading
             className="mt-10"
           />
           <OAuth />
@@ -132,7 +153,7 @@ const SignUp = () => {
               icon={icons.lock}
               placeholder="12345"
               value={verification.code}
-              keyboardType="numeric"
+              keyboardType="numeric" // Corrected typo here
               onChangeText={(code) =>
                 setVerification({ ...verification, code })
               }
@@ -142,9 +163,11 @@ const SignUp = () => {
                 {verification.error}
               </Text>
             )}
+            {/* Disabled button during loading */}
             <CustomButton
               title="Verify Email"
               onPress={onVerifyPress}
+              disabled={loading} // Disable button when loading
               className="mt-5 bg-success-500"
             />
           </View>
