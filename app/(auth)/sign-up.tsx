@@ -1,11 +1,4 @@
-import {
-  Text,
-  ScrollView,
-  View,
-  Image,
-  NativeModules,
-  Alert,
-} from "react-native";
+import { Text, ScrollView, View, Image, Alert } from "react-native";
 import { icons, images } from "@/constants";
 import InputField from "@/components/InputField";
 import React, { useState } from "react";
