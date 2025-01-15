@@ -5,7 +5,7 @@ import {
   Image,
   Alert,
   ActivityIndicator,
-} from "react-native"; // Added ActivityIndicator
+} from "react-native";
 import { icons, images } from "@/constants";
 import InputField from "@/components/InputField";
 import React, { useState } from "react";
@@ -17,6 +17,7 @@ import { ReactNativeModal } from "react-native-modal";
 
 const SignUp = () => {
   const { isLoaded, signUp, setActive } = useSignUp();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const [form, setForm] = useState({ name: "", email: "", password: "" });
   const [verification, setVerification] = useState({
